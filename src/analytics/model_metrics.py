@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 def compute_model_metrics(df):
     api_df = df[df["event_type"] == "claude_code.api_request"]
 
@@ -12,6 +15,8 @@ def compute_model_metrics(df):
     )
 
     metrics["total_tokens"] = (metrics["total_input_tokens"] + metrics["total_output_tokens"])
-    metrics = metrics.fillna(0)
+
+    with pd.option_context('future.no_silent_downcasting', True):
+        metrics = metrics.fillna(0).infer_objects(copy=False)
 
     return metrics

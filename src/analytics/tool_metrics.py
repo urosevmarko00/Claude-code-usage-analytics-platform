@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 def compute_tool_metrics(df):
     api_df = df[df["event_type"] == "claude_code.tool_result"]
 
@@ -9,6 +12,7 @@ def compute_tool_metrics(df):
         ).reset_index()
     )
 
-    metrics = metrics.fillna(0)
+    with pd.option_context('future.no_silent_downcasting', True):
+        metrics = metrics.fillna(0).infer_objects(copy=False)
 
     return metrics
