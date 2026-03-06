@@ -1,8 +1,10 @@
 # LLM Usage Analytics Platform
 
-This project implements a data pipeline and analytics dashboard for monitoring Large Language Model (LLM) usage based on telemetry logs.
+This project implements an **end-to-end analytics platform for Large Language Model (LLM) telemetry data**.
 
-The system ingests raw JSONL logs, processes them into a structured dataset, stores them in SQLite, and exposes analytics through a Streamlit dashboard.
+The system processes raw Claude Code telemetry logs, transforms them into a structured dataset, stores them in a database, and exposes insights through an interactive dashboard and API.
+
+The goal is to extract **actionable insights about developer usage patterns, token consumption, and model efficiency**.
 
 ---
 
@@ -10,19 +12,21 @@ The system ingests raw JSONL logs, processes them into a structured dataset, sto
 
 Pipeline overview:
 ```
-Raw telemetry logs
-        ↓
-    Log parsing
-        ↓
-Dataset normalization
-        ↓
+Raw telemetry logs (JSONL)
+    ↓
+Log ingestion
+    ↓
+Event parsing & normalization
+    ↓
+Dataset cleaning & enrichment
+    ↓
 Processed dataset (CSV)
-        ↓
-  SQLite database
-        ↓
-SQL analytics queries
-        ↓
-Streamlit dashboard
+    ↓
+SQLite storage
+    ↓
+SQL analytics layer
+    ↓
+Streamlit dashboard + FastAPI API
 ```
 
 
@@ -33,27 +37,35 @@ Streamlit dashboard
 Claude_Code_Analytics_Platform
 
 data/
-raw/                # raw telemetry logs
-processed/          # processed dataset
-analytics.db        # SQLite database
+├── raw/ # Raw telemetry logs
+├── processed/ # Cleaned dataset
+└── analytics.db # SQLite analytics database
 
-dataset_generator/  # synthetic dataset generator
+dataset_generator/
+└── generate_fake_data.py # Synthetic telemetry generator
 
 src/
-ingestion/          # load JSONL logs
-processing/         # parsing and dataset building
-database/           # database connection and loading
-analytics/          # SQL analytics queries
-dashboard/          # Streamlit dashboard
+├── ingestion/ # JSONL loading
+├── processing/ # log parsing & dataset building
+├── database/ # SQLite connection and loading
+├── analytics/ # analytics queries + forecasting
+├── dashboard/ # Streamlit dashboard
+├── api/ # FastAPI endpoints
+└── utils/ # helper utilities
 
-notebooks/          # exploratory analysis
+notebooks/
+└── exploratory_analysis.ipynb
 ```
 
 ---
 
 # Setup
 
-Clone the repository.
+Clone the repository:
+```bash
+git clone <repo-url>
+cd Claude_Code_Analytics_Platform
+```
 
 Install dependencies:
 ```bash
@@ -89,6 +101,16 @@ python3 dataset_generator/generate_fake_data.py --num-users 100 --num-sessions 5
 ```bash
 python -m src.processing.build_dataset
 ```
+This step:
++ Parses telemetry logs
++ Normalizes nested JSON fields
++ Cleans numeric features
++ Joins user metadata
++ Produces:
+```
+data/processed/processed_events.csv
+```
+
 ### 3. Load dataset into SQLite
 ```bash
 python -m src.database.load_to_db
@@ -105,46 +127,122 @@ data/analytics.db
 ```bash
 python -m streamlit run src/dashboard/app.py
 ```
-
-
 ---
+# Dashboard Insights
 
-# Analytics Features
+The platform provides several analytics views:
 
-The dashboard provides insights into LLM usage:
+## KPI Overview
 
-User analytics
+High-level operational metrics:
++ Total requests
++ Total tokens
++ Total cost
++ Error rate
+
+## User Analytics
+
 + Top 10 most expensive users
-+ Request counts per user
++ Requests per user
++ Token consumption per user
 
-Usage trends
+## Usage Trends
+
 + Token usage over time
 + Cost trends
++ Hourly activity patterns
 
-Model analytics
+## Model Analytics
+
 + Model usage distribution
 + Model efficiency (tokens per dollar)
 
-Practice analytics
+## Engineering Practice Insights
+
 + Token usage by engineering practice
++ Cost distribution across teams
 
-Tool analytics
-+ Tool call frequency
-+ Success rate
-+ Average result size
+## Tool Usage
++ Tool invocation frequency
++ Tool success rate
++ Average tool output size
 
-Operational metrics
-+ Error counts
-+ Hourly usage patterns
+---
+
+# Advanced Analytics
+
+The platform includes several additional insights.
+
+## Cost per Request
+Measures LLM efficiency by calculating the average cost per API request.
+
+## Token Usage Forecasting
+A simple predictive model estimates future token usage trends using time-series regression.
+
+## Model Efficiency
+Evaluates models based on tokens generated per dollar spent.
+
+---
+
+# API Access
+
+The analytics layer is also exposed through a REST API.
+
+Example endpoints:
+
+```
+GET /users
+GET /models
+GET /usage/trend
+GET /analytics/cost_per_request
+```
+Run the API:
+
+```bash
+uvicorn src.api.main:app --reload
+```
+---
+
+# Performance Optimizations
+
+To improve performance and reduce dataset size:
+
+### Event Filtering
+
+Only relevant telemetry events are stored:
+
+```
+claude_code.api_request
+claude_code.tool_result
+claude_code.api_error
+```
+This reduces dataset size by ~35%.
+
+---
+# Exploratory Data Analysis
+
+An exploratory notebook is included:
+
+```
+notebooks/exploratory_analysis.ipynb
+```
+It contains:
++ missing value analysis
++ event distribution
++ token usage exploration
++ dataset validation checks
 
 ---
 
 # Technologies
 
-+ Python  
-+ Pandas  
-+ SQLite  
-+ Streamlit  
+Core technologies used in this project:
++ Python
++ Pandas
++ SQLite
++ Streamlit
++ FastAPI
++ Scikit-learn 
 
 ---
 
