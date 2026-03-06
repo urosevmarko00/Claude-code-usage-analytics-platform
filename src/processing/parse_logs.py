@@ -10,7 +10,10 @@ def extract_events(records):
         log_events = record.get("logEvents", [])
 
         for event in log_events:
-            message_json = json.loads(event["message"])
+            try:
+                message_json = json.loads(event["message"])
+            except json.JSONDecodeError:
+                continue
 
             event_data = {
                 "timestamp": event["timestamp"],
@@ -55,5 +58,7 @@ def clean_dataset(df):
     for col in numeric_cols:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
+
+    df[numeric_cols] = df[numeric_cols].fillna(0)
 
     return df
