@@ -89,6 +89,7 @@ st.divider()
 st.header("Token Usage Forecast")
 
 forecast = forecast_tokens()
+forecast["predicted_tokens"] = forecast["predicted_tokens"].apply(format_tokens)
 
 st.dataframe(forecast)
 st.line_chart(forecast.set_index("date")["predicted_tokens"])
