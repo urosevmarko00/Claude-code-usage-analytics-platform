@@ -1,5 +1,6 @@
 import streamlit as st
 from src.utils.helpers import format_currency, format_tokens
+from src.analytics.forecasting import forecast_tokens
 from src.analytics.sql_queries import user_usage, hourly_usage, tool_usage, practice_usage, error_rate, model_usage, \
     top_expensive_users, token_usage_trend, model_efficiency, cost_per_request
 
@@ -78,6 +79,19 @@ with col1:
 with col2:
     st.subheader("Costs by date")
     st.line_chart(trend.set_index("date")["cost"])
+
+st.divider()
+
+# ---------------------------
+# FORECAST USAGE
+# ---------------------------
+
+st.header("Token Usage Forecast")
+
+forecast = forecast_tokens()
+
+st.dataframe(forecast)
+st.line_chart(forecast.set_index("date")["predicted_tokens"])
 
 st.divider()
 
