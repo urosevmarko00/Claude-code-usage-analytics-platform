@@ -1,5 +1,5 @@
 import streamlit as st
-from src.utils.helpers import format_currency, format_tokens
+from src.utils.helpers import format_currency, format_tokens, format_rate
 from src.analytics.forecasting import forecast_tokens
 from src.analytics.sql_queries import user_usage, hourly_usage, tool_usage, practice_usage, error_rate, model_usage, \
     top_expensive_users, token_usage_trend, model_efficiency, cost_per_request
@@ -147,6 +147,7 @@ tools = tool_usage()
 
 tools["tool_calls"] = tools["tool_calls"].apply(format_tokens)
 tools["average_result_size_bytes"] = tools["average_result_size_bytes"].apply(format_tokens)
+tools["success_rate"] = tools["success_rate"].apply(format_rate)
 
 st.dataframe(tools)
 

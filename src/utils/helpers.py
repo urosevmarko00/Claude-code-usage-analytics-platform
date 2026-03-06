@@ -21,6 +21,16 @@ def format_tokens(value):
     return f"{float(value):,.2f}"
 
 
+def format_rate(value):
+    """
+    Format success rates to %
+    """
+    if pd.isna(value):
+        return "0%"
+
+    return f"{float(value)*100:.2f} %"
+
+
 def safe_divide(a, b):
     """
     Avoid division by zero.
