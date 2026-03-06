@@ -78,7 +78,7 @@ def tool_usage():
     SELECT
         "attr.tool_name" AS tool,
         COUNT(*) AS tool_calls,
-        AVG("attr.tool_result_size_bytes") AS average_result_size,
+        AVG("attr.tool_result_size_bytes") AS average_result_size_bytes,
         AVG("attr.success") AS success_rate
     FROM events
     WHERE event_type = 'claude_code.tool_result'
@@ -94,7 +94,55 @@ def error_rate():
     SELECT
         COUNT(*) AS total_errors
     FROM events
-    WHERE event_type = 'claude_code.api_error
-    '"""
+    WHERE event_type = 'claude_code.api_error'
+    """
+
+    return query_db(query)
+
+
+def top_expensive_users():
+    query = """
+    SELECT 
+        "attr.user.email" AS user_email,
+        SUM("attr.cost_usd") AS total_cost,
+        SUM("attr.input_tokens" + "attr.output_tokens") AS total_tokens,
+        COUNT(*) AS requests
+    FROM events
+    WHERE event_type = 'claude_code.api_request'
+    GROUP BY user_email
+    ORDER BY total_cost DESC
+    LIMIT 10
+    """
+
+    return query_db(query)
+
+
+def token_usage_trend():
+    query = """
+    SELECT
+        DATE("attr.event.timestamp") AS date,
+        SUM("attr.input_tokens" + "attr.output_tokens") AS tokens,
+        SUM("attr.cost_usd") AS cost
+    FROM events
+    WHERE event_type = 'claude_code.api_request'
+    GROUP BY date
+    ORDER BY date
+    """
+
+    return query_db(query)
+
+
+def model_efficiency():
+    query = """
+    SELECT
+        "attr.model" AS model,
+        SUM("attr.input_tokens" + "attr.output_tokens") AS tokens,
+        SUM("attr.cost_usd") AS cost,
+        SUM("attr.input_tokens" + "attr.output_tokens") / SUM("attr.cost_usd") AS tokens_per_dollar
+    FROM events
+    WHERE event_type = 'claude_code.api_request'
+    GROUP BY model
+    ORDER BY tokens_per_dollar DESC
+    """
 
     return query_db(query)
