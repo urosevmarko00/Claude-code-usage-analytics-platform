@@ -3,6 +3,11 @@ import pandas as pd
 
 
 def extract_events(records):
+    allowed_events = {
+        "claude_code.api_request",
+        "claude_code.api_error",
+        "claude_code.tool_result"
+    }
     events = []
 
     for record in records:
@@ -13,6 +18,10 @@ def extract_events(records):
             try:
                 message_json = json.loads(event["message"])
             except json.JSONDecodeError:
+                continue
+
+            event_type = message_json.get("body")
+            if event_type not in allowed_events:
                 continue
 
             event_data = {
@@ -51,7 +60,6 @@ def clean_dataset(df):
         "attr.input_tokens",
         "attr.output_tokens",
         "attr.duration_ms",
-        "attr.prompt_length",
         "attr.cost_usd"
     ]
 
