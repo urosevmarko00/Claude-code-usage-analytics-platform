@@ -3,3 +3,10 @@ __pycache__/
 .env
 *.pyc
 .idea/
+data/analytics.db
+data/raw/*.csv
+data/raw/*.jsonl
+data/processed/*.csv
+
+!data/raw/.gitkeep
+!data/processed/.gitkeep
