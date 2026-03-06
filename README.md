@@ -173,13 +173,13 @@ High-level operational metrics:
 
 The platform includes several additional insights.
 
-## Cost per Request
+### Cost per Request
 Measures LLM efficiency by calculating the average cost per API request.
 
-## Token Usage Forecasting
+### Token Usage Forecasting
 A simple predictive model estimates future token usage trends using time-series regression.
 
-## Model Efficiency
+### Model Efficiency
 Evaluates models based on tokens generated per dollar spent.
 
 ---
@@ -217,6 +217,16 @@ claude_code.tool_result
 claude_code.api_error
 ```
 This reduces dataset size by ~35%.
+
+### Database Indexing
+
+Indexes are created for frequently queried fields:
+
++ event_type
++ attr.user.email
++ attr.model
+
+This significantly speeds up analytics queries.
 
 ---
 # Exploratory Data Analysis
