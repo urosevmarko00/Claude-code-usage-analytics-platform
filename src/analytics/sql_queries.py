@@ -146,3 +146,19 @@ def model_efficiency():
     """
 
     return query_db(query)
+
+
+def cost_per_request():
+    query = """
+    SELECT
+        "attr.model" AS model,
+        COUNT(*) AS total_requests,
+        SUM("attr.cost_usd") AS total_cost,
+        SUM("attr.cost_usd") / COUNT(*) AS cost_per_request
+    FROM events
+    WHERE event_type = 'claude_code.api_request'
+    GROUP BY model
+    ORDER BY total_cost DESC
+    """
+
+    return query_db(query)

@@ -1,7 +1,7 @@
 import streamlit as st
 from src.utils.helpers import format_currency, format_tokens
 from src.analytics.sql_queries import user_usage, hourly_usage, tool_usage, practice_usage, error_rate, model_usage, \
-    top_expensive_users, token_usage_trend, model_efficiency
+    top_expensive_users, token_usage_trend, model_efficiency, cost_per_request
 
 
 st.set_page_config(
@@ -89,13 +89,20 @@ st.header("Model Analytics")
 
 efficiency = model_efficiency()
 
+cost_req = cost_per_request()
+cost_req["total_requests"] = cost_req["total_requests"].apply(format_tokens)
+cost_req["total_cost"] = cost_req["total_cost"].apply(format_currency)
+
 col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Model Efficiency (tokens per $)")
     st.bar_chart(efficiency.set_index("model")["tokens_per_dollar"])
+    st.subheader("Model Efficiency (cost per request)")
+    st.bar_chart(cost_req.set_index("model")["cost_per_request"])
 
 with col2:
+    st.markdown("<br><br><br><br><br><br><br><br>", unsafe_allow_html=True)
     st.subheader("Model Usage")
     model = model_usage()
     model["requests"] = model["requests"].apply(format_tokens)
