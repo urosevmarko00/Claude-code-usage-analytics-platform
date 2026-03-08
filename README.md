@@ -44,6 +44,9 @@ data/
 dataset_generator/
 └── generate_fake_data.py # Synthetic telemetry generator
 
+presentation/
+└──LLM_Usage_Analytics_Insights.pdf # Insights presentation
+
 src/
 ├── ingestion/ # JSONL loading
 ├── processing/ # log parsing & dataset building
