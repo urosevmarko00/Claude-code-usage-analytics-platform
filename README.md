@@ -74,10 +74,10 @@ The project requires a python environment that supports the following core libra
 
 Recommended Pyton version:
 ```
-Python 3.9 - 3.11
+Python 3.9 - 3.12
 ```
 
-Python 3.12 may cause compatibility issues with some versions of `scikit-learn`.
+Python 3.13+ may cause compatibility issues with some versions of `scikit-learn`.
 
 You can check your version:
 ```bash
