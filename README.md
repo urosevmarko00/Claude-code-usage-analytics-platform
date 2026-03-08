@@ -59,6 +59,75 @@ notebooks/
 
 ---
 
+# Environment Requirements
+
+The project requires a python environment that supports the following core libraries:
+
++ Pandas
++ Scikit-learn
++ Streamlit
++ FastAPI
++ Uvicorn
+
+Recommended Pyton version:
+```
+Python 3.9 - 3.11
+```
+
+Python 3.12 may cause compatibility issues with some versions of `scikit-learn`.
+
+You can check your version:
+```bash
+python3 --version
+```
+
+## Virtual Environment Setup (Recommended)
+
+### Windows
+```bash
+python3 -m venv venv
+venv\Scripts\acivate
+```
+
+### Linux / macOS
+```bash
+python3 -m venv venv
+source venv/bin/acivate
+```
+---
+
+## Windows Setup
+When installing Python packages that contain compiled extensions (such as `scikit-learn`), Windows may require **Microsoft C++ Build Tools** .
+
+If installation fails with errors related to `build tools`, install:
+
+Microsoft C++ Build Tools
+
+Download:
+
+https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
+During installation select:
+
+```
+Desktop development with C++
+```
+
+After installation restart the terminal before installing dependencies.
+
+---
+## Linux Setup
+Most Linux distributions already contain the required build tools.
+
+If installation fails, install the standard Python build dependencies.
+
+### Ubuntu / Debian
+```bash
+sudo apt update
+sudo apt install python3-dev build-essential
+```
+
+---
 # Setup
 
 Clone the repository:
@@ -99,7 +168,7 @@ python3 dataset_generator/generate_fake_data.py --num-users 100 --num-sessions 5
 
 ### 2. Build processed dataset
 ```bash
-python -m src.processing.build_dataset
+python3 -m src.processing.build_dataset
 ```
 This step:
 + Parses telemetry logs
@@ -113,7 +182,7 @@ data/processed/processed_events.csv
 
 ### 3. Load dataset into SQLite
 ```bash
-python -m src.database.load_to_db
+python3 -m src.database.load_to_db
 ```
 This creates:
 
@@ -125,7 +194,7 @@ data/analytics.db
 # Run Dashboard
 
 ```bash
-python -m streamlit run src/dashboard/app.py
+python3 -m streamlit run src/dashboard/app.py
 ```
 ---
 # Dashboard Insights
