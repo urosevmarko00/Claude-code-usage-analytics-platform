@@ -27,12 +27,6 @@ total_tokens = format_tokens(total_tokens)
 total_cost = format_currency(total_cost)
 total_requests = format_tokens(total_requests)
 
-errors["total_errors"] = errors["total_errors"].apply(format_tokens)
-
-users["total_requests"] = users["total_requests"].apply(format_tokens)
-users["input_tokens"] = users["input_tokens"].apply(format_tokens)
-users["output_tokens"] = users["output_tokens"].apply(format_tokens)
-users["total_cost"] = users["total_cost"].apply(format_currency)
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -89,10 +83,9 @@ st.divider()
 st.header("Token Usage Forecast")
 
 forecast = forecast_tokens()
-forecast["predicted_tokens"] = forecast["predicted_tokens"].apply(format_tokens)
 
 st.dataframe(forecast)
-st.line_chart(forecast.set_index("date")["predicted_tokens"])
+st.line_chart(forecast.set_index("date")["predicted_tokens"].apply(format_tokens))
 
 st.divider()
 
@@ -105,8 +98,6 @@ st.header("Model Analytics")
 efficiency = model_efficiency()
 
 cost_req = cost_per_request()
-cost_req["total_requests"] = cost_req["total_requests"].apply(format_tokens)
-cost_req["total_cost"] = cost_req["total_cost"].apply(format_currency)
 
 col1, col2 = st.columns(2)
 
@@ -120,8 +111,6 @@ with col2:
     st.markdown("<br><br><br><br><br><br><br><br>", unsafe_allow_html=True)
     st.subheader("Model Usage")
     model = model_usage()
-    model["requests"] = model["requests"].apply(format_tokens)
-    model["tokens"] = model["tokens"].apply(format_tokens)
     st.dataframe(model)
 
 st.divider()
@@ -146,8 +135,6 @@ st.header("Tool Analytics")
 
 tools = tool_usage()
 
-tools["tool_calls"] = tools["tool_calls"].apply(format_tokens)
-tools["average_result_size_bytes"] = tools["average_result_size_bytes"].apply(format_tokens)
 tools["success_rate"] = tools["success_rate"].apply(format_rate)
 
 st.dataframe(tools)
